@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Roblox API Tools</title>
+</head>
+<body>
+  <h1>Roblox Studio Mobile API</h1>
+
+  <!-- 1. Авторизація -->
+  <button onclick="getCreations()">Отримати creations</button>
+
+  <!-- 2. Створити гру -->
+  <button onclick="createGame()">Створити гру</button>
+
+  <!-- 3. Оновити гру -->
+  <button onclick="updateGame()">Оновити гру</button>
+
+  <!-- 4. Зберегти модель -->
+  <button onclick="saveAsset()">Зберегти модель</button>
+
+  <!-- 5. Видалити об’єкт -->
+  <button onclick="deleteAsset()">Видалити об’єкт</button>
+
+  <!-- 6. Опублікувати гру -->
+  <button onclick="publishGame()">Опублікувати гру</button>
+
+  <pre id="output"></pre>
+
+<script>
+const API_KEY = "YOUR_ROBLOX_API_KEY";
+const headers = {
+  "Content-Type": "application/json",
+  "x-api-key": API_KEY
+};
+
+// 1. Отримати creations
+async function getCreations() {
+  const res = await fetch("https://apis.roblox.com/creations/v1/creations", { headers });
+  document.getElementById("output").textContent = await res.text();
+}
+
+// 2. Створити гру
+async function createGame() {
+  const data = { name: "My First Mobile Game", description: "Створено через HTML", genre: "Adventure" };
+  const res = await fetch("https://apis.roblox.com/universes/v1/create", {
+    method: "POST", headers, body: JSON.stringify(data)
+  });
+  document.getElementById("output").textContent = await res.text();
+}
+
+// 3. Оновити гру
+async function updateGame() {
+  const universeId = "1234567890";
+  const data = { name: "New Title", description: "Оновлений опис" };
+  const res = await fetch(`https://apis.roblox.com/universes/v1/${universeId}/update`, {
+    method: "POST", headers, body: JSON.stringify(data)
+  });
+  document.getElementById("output").textContent = await res.text();
+}
+
+// 4. Зберегти модель (приклад без файлу, бо у браузері складніше)
+async function saveAsset() {
+  const data = { assetType: "Model", name: "MyModel", description: "Saved via HTML" };
+  const res = await fetch("https://apis.roblox.com/assets/v1/upload", {
+    method: "POST", headers, body: JSON.stringify(data)
+  });
+  document.getElementById("output").textContent = await res.text();
+}
+
+// 5. Видалити об’єкт
+async function deleteAsset() {
+  const assetId = "987654321";
+  const res = await fetch(`https://apis.roblox.com/assets/v1/${assetId}/delete`, {
+    method: "DELETE", headers
+  });
+  document.getElementById("output").textContent = await res.text();
+}
+
+// 6. Опублікувати гру
+async function publishGame() {
+  const universeId = "1234567890";
+  const res = await fetch(`https://apis.roblox.com/universes/v1/${universeId}/publish`, {
+    method: "POST", headers
+  });
+  document.getElementById("output").textContent = await res.text();
+}
+</script>
+</body>
+</html>
