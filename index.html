@@ -1,90 +1,101 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Roblox API Tools</title>
+  <title>Roblox Studio Mobile</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      background: #1e1e1e;
+      color: white;
+    }
+    #menu {
+      width: 200px;
+      background: #2d2d2d;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    #editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #scene {
+      flex: 2;
+    }
+    button {
+      margin: 5px 0;
+      padding: 10px;
+      background: #3a3a3a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+  </style>
 </head>
 <body>
-  <h1>Roblox Studio Mobile API</h1>
+  <div id="menu">
+    <h3>Меню</h3>
+    <button onclick="getCreations()">Creations</button>
+    <button onclick="createGame()">Create Game</button>
+    <button onclick="updateGame()">Update Game</button>
+    <button onclick="saveAsset()">Save Asset</button>
+    <button onclick="deleteAsset()">Delete Asset</button>
+    <button onclick="publishGame()">Publish Game</button>
+    <button onclick="goFullscreen()">Full Screen</button>
+  </div>
 
-  <!-- 1. Авторизація -->
-  <button onclick="getCreations()">Отримати creations</button>
+  <div id="editor">
+    <h3>Редактор коду</h3>
+    <textarea style="flex:1; width:100%; background:#111; color:#0f0;"></textarea>
+  </div>
 
-  <!-- 2. Створити гру -->
-  <button onclick="createGame()">Створити гру</button>
+  <canvas id="scene"></canvas>
 
-  <!-- 3. Оновити гру -->
-  <button onclick="updateGame()">Оновити гру</button>
-
-  <!-- 4. Зберегти модель -->
-  <button onclick="saveAsset()">Зберегти модель</button>
-
-  <!-- 5. Видалити об’єкт -->
-  <button onclick="deleteAsset()">Видалити об’єкт</button>
-
-  <!-- 6. Опублікувати гру -->
-  <button onclick="publishGame()">Опублікувати гру</button>
-
-  <pre id="output"></pre>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const API_KEY = "YOUR_ROBLOX_API_KEY";
-const headers = {
-  "Content-Type": "application/json",
-  "x-api-key": API_KEY
-};
-
-// 1. Отримати creations
-async function getCreations() {
-  const res = await fetch("https://apis.roblox.com/creations/v1/creations", { headers });
-  document.getElementById("output").textContent = await res.text();
+function goFullscreen() {
+  document.documentElement.requestFullscreen();
 }
 
-// 2. Створити гру
-async function createGame() {
-  const data = { name: "My First Mobile Game", description: "Створено через HTML", genre: "Adventure" };
-  const res = await fetch("https://apis.roblox.com/universes/v1/create", {
-    method: "POST", headers, body: JSON.stringify(data)
-  });
-  document.getElementById("output").textContent = await res.text();
-}
+// 3D сцена
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById("scene")});
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-// 3. Оновити гру
-async function updateGame() {
-  const universeId = "1234567890";
-  const data = { name: "New Title", description: "Оновлений опис" };
-  const res = await fetch(`https://apis.roblox.com/universes/v1/${universeId}/update`, {
-    method: "POST", headers, body: JSON.stringify(data)
-  });
-  document.getElementById("output").textContent = await res.text();
-}
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
 
-// 4. Зберегти модель (приклад без файлу, бо у браузері складніше)
-async function saveAsset() {
-  const data = { assetType: "Model", name: "MyModel", description: "Saved via HTML" };
-  const res = await fetch("https://apis.roblox.com/assets/v1/upload", {
-    method: "POST", headers, body: JSON.stringify(data)
-  });
-  document.getElementById("output").textContent = await res.text();
-}
+camera.position.z = 5;
 
-// 5. Видалити об’єкт
-async function deleteAsset() {
-  const assetId = "987654321";
-  const res = await fetch(`https://apis.roblox.com/assets/v1/${assetId}/delete`, {
-    method: "DELETE", headers
-  });
-  document.getElementById("output").textContent = await res.text();
+function animate() {
+  requestAnimationFrame(animate);
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  renderer.render(scene, camera);
 }
+animate();
 
-// 6. Опублікувати гру
-async function publishGame() {
-  const universeId = "1234567890";
-  const res = await fetch(`https://apis.roblox.com/universes/v1/${universeId}/publish`, {
-    method: "POST", headers
-  });
-  document.getElementById("output").textContent = await res.text();
-}
+// Заглушки для API
+function getCreations(){ alert("Creations API"); }
+function createGame(){ alert("Create Game API"); }
+function updateGame(){ alert("Update Game API"); }
+function saveAsset(){ alert("Save Asset API"); }
+function deleteAsset(){ alert("Delete Asset API"); }
+function publishGame(){ alert("Publish Game API"); }
 </script>
 </body>
 </html>
