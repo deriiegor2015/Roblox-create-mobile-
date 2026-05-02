@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -10,42 +10,42 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      display: flex;
-      flex-direction: row;
       background: #1e1e1e;
       color: white;
+      display: flex;
+      flex-direction: column;
     }
     #menu {
-      width: 200px;
       background: #2d2d2d;
       padding: 10px;
       display: flex;
-      flex-direction: column;
-    }
-    #editor {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    #scene {
-      flex: 2;
+      flex-direction: row;
+      justify-content: space-around;
     }
     button {
-      margin: 5px 0;
+      margin: 5px;
       padding: 10px;
       background: #3a3a3a;
       color: white;
       border: none;
       cursor: pointer;
     }
-    button:hover {
-      background: #555;
+    button:hover { background: #555; }
+    #editor {
+      flex: 1;
+      background: #111;
+      color: #0f0;
+      padding: 10px;
+      font-family: monospace;
+    }
+    #scene {
+      flex: 2;
     }
   </style>
 </head>
 <body>
+  <!-- Меню кнопок -->
   <div id="menu">
-    <h3>Меню</h3>
     <button onclick="getCreations()">Creations</button>
     <button onclick="createGame()">Create Game</button>
     <button onclick="updateGame()">Update Game</button>
@@ -53,13 +53,15 @@
     <button onclick="deleteAsset()">Delete Asset</button>
     <button onclick="publishGame()">Publish Game</button>
     <button onclick="goFullscreen()">Full Screen</button>
+    <button onclick="runCode()">Run</button>
   </div>
 
-  <div id="editor">
-    <h3>Редактор коду</h3>
-    <textarea style="flex:1; width:100%; background:#111; color:#0f0;"></textarea>
-  </div>
+  <!-- Редактор -->
+  <textarea id="editor">// Напиши код тут, наприклад:
+// cube.material.color.set(0xff0000);
+</textarea>
 
+  <!-- Сцена -->
   <canvas id="scene"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -89,13 +91,23 @@ function animate() {
 }
 animate();
 
+// Реакція на код з редактора
+function runCode() {
+  const code = document.getElementById("editor").value;
+  try {
+    eval(code); // виконує код з редактора
+  } catch (e) {
+    alert("Помилка: " + e.message);
+  }
+}
+
 // Заглушки для API
-function getCreations(){ alert("Creations API"); }
-function createGame(){ alert("Create Game API"); }
-function updateGame(){ alert("Update Game API"); }
-function saveAsset(){ alert("Save Asset API"); }
-function deleteAsset(){ alert("Delete Asset API"); }
-function publishGame(){ alert("Publish Game API"); }
+function getCreations(){ alert("API: getCreations"); }
+function createGame(){ alert("API: createGame"); }
+function updateGame(){ alert("API: updateGame"); }
+function saveAsset(){ alert("API: saveAsset"); }
+function deleteAsset(){ alert("API: deleteAsset"); }
+function publishGame(){ alert("API: publishGame"); }
 </script>
 </body>
 </html>
